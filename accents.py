@@ -13,17 +13,19 @@ from shapely import affinity
 from shapely.geometry import Point, Polygon
 
 import letters
-from engine import CAP, G, XH, rrect
+from engine import CAP, G, XH, cusped, rrect, window
 from letters import GLYPHS, OV, R, SB, V, dome, glyph, stem
 
 # Western European letters, then the letters used to write Indian languages
 # in Latin script (IAST / ISO 15919), then a few Central European ones.
-COVER = ("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿ"
+COVER = ("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝŸàáâãäåçèéêëìíîïñòóôõöùúûüýÿ"
          "ĀāĒēĪīŌōŪūṚṛṜṝḶḷṄṅÑñṬṭḌḍṆṇŚśṢṣḤḥṀṁṂṃ"
          "ĆćČčŃńŠšŞşŹźŻżŽž")
 
 GAP_LOW, GAP_CAP = 40, 30     # air between a letter and the mark above it
 BELOW = -OV - 38              # top of a mark under the baseline
+MIN_SB = 28                   # keep wide marks on I and i from touching neighbours
+WIDE_MARKS = {"̂", "̃", "̄", "̈", "̌"}
 
 
 def _stroke(pts, scale):
@@ -91,22 +93,40 @@ def _dotless_i():
     return g
 
 
+def _short_A():
+    """Capital A with a slightly tucked finial so marks align with E, I, O, U."""
+    x0, w = 30, 548
+    cx = x0 + w / 2
+    g = G(w + 2 * x0)
+    g.add(window(cx, w, 0, 270, CAP + 16))
+    g.cut(cusped(cx, 218, -20, 108, 258))
+    g.cut(window(cx, 146, 344, 424, 548, base="round"))
+    return g
+
+
 def _compose(ch):
     parts = unicodedata.normalize("NFD", ch)
     base, marks = parts[0], parts[1:]
 
     def make():
         above = [m for m in marks if MARKS[m][1] == "above"]
-        src = _dotless_i() if base == "i" and above else GLYPHS[base]()
+        if base == "i" and above:
+            src = _dotless_i()
+        elif base == "A" and above:
+            src = _short_A()
+        else:
+            src = GLYPHS[base]()
         geo = src.geometry()
         x0, _, x1, top = geo.bounds
         cx = (x0 + x1) / 2
         g = G(src.adv).add(geo)
-        y = top + (GAP_CAP if base.isupper() else GAP_LOW)
+        y = (CAP + 24) if (base == "A" and above) else (top + (GAP_CAP if base.isupper() else GAP_LOW))
         for m in marks:
             fn, where = MARKS[m]
             shape = fn()
             if where == "above":
+                if base in ("I", "i") and m in WIDE_MARKS:
+                    shape = affinity.scale(shape, xfact=0.80, origin=(0, 0))
                 if base.isupper():                      # flatter over capitals
                     shape = affinity.scale(shape, yfact=0.84, origin=(0, 0))
                 g.add(affinity.translate(shape, cx, y))
@@ -116,6 +136,11 @@ def _compose(ch):
                 g.add(affinity.translate(shape, STEM_X.get(base, cx), BELOW - h))
             else:
                 g.add(affinity.translate(shape, cx, 0))
+        full = g.geometry()
+        bx0, _, bx1, _ = full.bounds
+        pad = max(0, MIN_SB - bx0, MIN_SB - (g.adv - bx1))
+        if pad > 0:
+            return G(g.adv + 2 * pad).add(affinity.translate(full, pad, 0))
         return g
     return make
 

@@ -7,7 +7,7 @@
   cusps    the doorways of capital A, H and M are cusped (scalloped) arches
 """
 from shapely import affinity
-from shapely.geometry import Polygon
+from shapely.geometry import Point, Polygon
 from shapely.ops import unary_union
 
 import engine
@@ -142,20 +142,14 @@ def cap_A():
     return g
 
 
-def b_body(x0, round_foot):
-    """The two-storey block shared by B and R."""
-    x1 = x0 + VC + 198 + 134
-    upper = rrect(x0, 330, x1 - 24, CAP, tl=R, tr=165, br=120, bl=R)
-    lower = rrect(x0, 0, x1, 384, tl=R, tr=135, br=180 if round_foot else R, bl=R)
-    return unary_union([upper, lower]), x1
-
-
 @glyph("B")
 def cap_B():
     x0 = SB + 6
-    body, x1 = b_body(x0, True)
+    x1 = x0 + VC + 198 + 134
+    upper = rrect(x0, 330, x1 - 24, CAP, tl=R, tr=165, br=120, bl=R)
+    lower = rrect(x0, 0, x1, 384, tl=R, tr=135, br=180, bl=R)
     g = G(x1 + SR)
-    g.add(body)
+    g.add(unary_union([upper, lower]))
     g.cut(window(x0 + VC + 91, 182, 426, 500, CAP - 86))
     g.cut(window(x0 + VC + 102, 204, 100, 190, 298))
     return g
@@ -335,11 +329,13 @@ def cap_Q():
 @glyph("R")
 def cap_R():
     x0 = SB + 6
-    body, x1 = b_body(x0, False)
-    g = G(x1 + SB)
-    g.add(body)
-    g.cut(window(x0 + VC + 91, 182, 426, 500, CAP - 86))
-    g.cut(window(x0 + VC + 102, 204, -20, 150, 286))
+    x1 = x0 + VC + 192 + 134
+    s = x0 + VC
+    g = G(x1 + 34)
+    stem(g, x0, 0, CAP, VC)
+    g.add(rrect(x0, 292, x1, CAP, tl=R, tr=180, br=180, bl=R))
+    g.cut(window(s + 96, 192, 396, 482, CAP - 86))
+    g.add(cross(s - 10, 668, 190, 720, clip=(s - 10, 0, s + 420, 355)))
     return g
 
 
@@ -481,9 +477,9 @@ def e():
 @glyph("f")
 def f():
     xs = 40 + 62 + V / 2
-    g = G(xs + 200)
-    g.s([(xs, 0), (xs, ASC - HY, 150), (xs + 212, ASC - HY)])
-    g.s([(20, T), (xs + 192, T)])
+    g = G(xs + 204)
+    g.s([(xs, 0), (xs, ASC - HY, 150), (xs + 194, ASC - HY)])
+    g.s([(20, T), (xs + 190, T)])
     return g
 
 
@@ -820,14 +816,65 @@ def tick(x0):
     return Polygon([(x0, CAP), (x0 + 140, CAP), (x0 + 104, CAP - 236), (x0 + 36, CAP - 236)])
 
 
-@glyph("'", "\u2018", "\u2019")
+def curly_close(x0):
+    s = affinity.scale(comma_shape(0, 0), xfact=0.92, yfact=0.92, origin=(0, 150))
+    return affinity.translate(s, x0, CAP - 150)
+
+
+def curly_open(x0):
+    s = affinity.rotate(curly_close(0), 180, origin=(69, CAP - 138))
+    return affinity.translate(s, x0, 0)
+
+
+@glyph("'")
 def quote():
     return G(140 + 2 * 40).add(tick(40))
 
 
-@glyph('"', "\u201c", "\u201d")
+@glyph('"')
 def dquote():
     return G(140 * 2 + 44 + 2 * 40).add(tick(40)).add(tick(40 + 184))
+
+
+@glyph("\u2018")
+def quote_l():
+    return G(138 + 72).add(curly_open(36))
+
+
+@glyph("\u2019")
+def quote_r():
+    return G(138 + 72).add(curly_close(36))
+
+
+@glyph("\u201c")
+def dquote_l():
+    return G(138 * 2 + 34 + 72).add(curly_open(36)).add(curly_open(36 + 172))
+
+
+@glyph("\u201d")
+def dquote_r():
+    return G(138 * 2 + 34 + 72).add(curly_close(36)).add(curly_close(36 + 172))
+
+
+@glyph("\u2026")
+def ellipsis():
+    w, step = 126, 186
+    g = G(SB * 2 + w + step * 2)
+    for k in range(3):
+        g.add(dome(SB + w / 2 + k * step, -OV, w))
+    return g
+
+
+@glyph("\u2022")
+def bullet():
+    return G(PW + 24).add(dome((PW + 24) / 2, 210, 156))
+
+
+@glyph("\u00b0")
+def degree():
+    r_out, r_in = 122, 48
+    cx, cy = 32 + r_out, CAP + OV - r_out
+    return G(cx * 2).add(Point(cx, cy).buffer(r_out, 32).difference(Point(cx, cy).buffer(r_in, 32)))
 
 
 @glyph("-")
@@ -1032,3 +1079,176 @@ def brace_l():
 @glyph("}")
 def brace_r():
     return G(380).add(affinity.scale(brace(130), xfact=-1, origin=(190, 0)))
+
+
+@glyph("€")
+def euro():
+    shape, x1, cx = c_body(76, (216, 474))
+    g = G(x1 + SR - 8)
+    g.add(shape)
+    g.add(rrect(12, 380, cx + 108, 464, R, R, R, R))
+    g.add(rrect(12, 226, cx + 84, 310, R, R, R, R))
+    return g
+
+
+@glyph("£")
+def pound():
+    x0 = 40
+    xs = x0 + 92 + VC / 2
+    g = G(520)
+    g.s([(xs, HB), (xs, CT, 150), (456, CT)])
+    g.add(rrect(x0, 0, 476, HB, R, R, R, R))
+    g.add(rrect(x0, 290, 396, 388, R, R, R, R))
+    return g
+
+
+# ---------------------------------------------------- extended European Latin
+@glyph("Æ")
+def cap_AE():
+    x0, x_stem = 26, 388
+    x1 = x_stem + VC + 228
+    g = G(x1 + SR)
+    arch = window(x_stem + 70, (x_stem + 70 - x0) * 2, 0, 270, CAP + 120)
+    g.add(arch.intersection(box(x0, 0, x_stem + VC, CAP)))
+    g.add(rrect(x_stem, 0, x1, CAP, R, R, R, R))
+    g.cut(cusped(x0 + 240, 168, -20, 118, 268))
+    g.cut(window(x0 + 266, 108, 352, 434, 554, base="round"))
+    g.cut(box(x_stem + VC, 424, x1 + 20, CAP - HB))
+    g.cut(box(x_stem + VC, HB, x1 + 20, 300))
+    g.cut(box(x1 - 44, 290, x1 + 20, 434))
+    g.add(corbel(x_stem + VC, CAP - HB, 1, -1, 66))
+    g.add(corbel(x_stem + VC, HB, 1, 1, 66))
+    return g
+
+
+@glyph("æ")
+def low_ae():
+    x0 = SR
+    x_mid = x0 + 308
+    door_e = 172
+    x1 = x_mid + V + door_e + 128
+    g = G(x1 + SR)
+    a_part = rrect(x0, -OV, x_mid + 60, XH + OV, tl=185, tr=110, br=110, bl=180)
+    a_part = a_part.difference(window(x0 + 202, 152, 76, 155, 258, base="round"))
+    a_part = a_part.difference(rrect(x0 - 20, 330, x_mid - 16, 386, tr=27, br=27))
+    e_part = rrect(x_mid, -OV, x1, XH + OV, tl=110, tr=200, br=200, bl=110)
+    cx_e = x_mid + V + door_e / 2
+    e_part = e_part.difference(window(cx_e, door_e, 292, 338, XH - TA + 4))
+    e_part = e_part.difference(rrect(cx_e - 52, 146, x1 + 20, 200, tl=27, bl=27))
+    g.add(unary_union([a_part, e_part]))
+    return g
+
+
+@glyph("Œ")
+def cap_OE():
+    x0, w_o = SR, 212
+    x_mid = x0 + 146 + w_o + 32
+    x1 = x_mid + VC + 224
+    g = G(x1 + SR)
+    left = rrect(x0, -OV, x_mid + 64, CAP + OV, tl=250, tr=185, br=185, bl=250)
+    left = left.difference(window(x0 + 146 + w_o / 2, w_o, 112, 368, CAP - 92, base="round"))
+    right = rrect(x_mid, 0, x1, CAP, R, R, R, R)
+    g.add(unary_union([left, right]))
+    g.cut(box(x_mid + VC, 424, x1 + 20, CAP - HB))
+    g.cut(box(x_mid + VC, HB, x1 + 20, 300))
+    g.cut(box(x1 - 44, 290, x1 + 20, 434))
+    g.add(corbel(x_mid + VC, CAP - HB, 1, -1, 66))
+    g.add(corbel(x_mid + VC, HB, 1, 1, 66))
+    return g
+
+
+@glyph("œ")
+def low_oe():
+    x0, w_l, door_o, door_e = SR, 128, 168, 172
+    x_mid = x0 + w_l + door_o
+    x1 = x_mid + V + door_e + 128
+    g = G(x1 + SR)
+    left = rrect(x0, -OV, x_mid + V, XH + OV, tl=200, tr=130, br=130, bl=200)
+    left = left.difference(window(x0 + w_l + door_o / 2, door_o, 94, 248, XH - TA + 4, base="round"))
+    right = rrect(x_mid, -OV, x1, XH + OV, tl=130, tr=200, br=200, bl=130)
+    cx_e = x_mid + V + door_e / 2
+    right = right.difference(window(cx_e, door_e, 292, 338, XH - TA + 4))
+    right = right.difference(rrect(cx_e - 52, 146, x1 + 20, 200, tl=27, bl=27))
+    g.add(unary_union([left, right]))
+    return g
+
+
+@glyph("ß")
+def eszett():
+    x0 = SB
+    x1 = x0 + V + 190 + 132
+    g = G(x1 + SR)
+    upper = rrect(x0, 336, x1 - 24, ASC, tl=215, tr=175, br=125, bl=R)
+    lower = rrect(x0, 0, x1, 396, tl=R, tr=140, br=180, bl=R)
+    g.add(unary_union([upper, lower]))
+    g.cut(window(x0 + V + 86, 172, 420, 515, ASC - 86))
+    g.cut(window(x0 + V + 95, 190, 96, 195, 308))
+    g.cut(box(x0 + V, -20, x0 + V + 84, 110))
+    return g
+
+
+@glyph("Ð")
+def cap_eth():
+    x0 = 68
+    x1 = x0 + VC + 236 + 150
+    g = G(x1 + SR)
+    g.add(rrect(x0, 0, x1, CAP, tl=R, tr=250, br=250, bl=R))
+    g.cut(window(x0 + VC + 118, 236, 112, 370, CAP - 92, base="round"))
+    g.add(rrect(12, 298, x0 + VC + 84, 298 + 104, R, R, R, R))
+    return g
+
+
+@glyph("ð")
+def low_eth():
+    g = G(0)
+    x1 = bowl(g, SR)
+    cx = (SR + x1) / 2
+    pts = arc(cx - 116, 436, x1 - 68 - (cx - 116), 322, 0, 84)
+    g.raw(pts, scale=0.84)
+    bar = rrect(cx - 52, 608, x1 + 12, 680, R, R, R, R)
+    g.add(affinity.rotate(bar, 22, origin=(cx + 76, 644)))
+    g.adv = x1 + SR
+    return g
+
+
+@glyph("Þ")
+def cap_thorn():
+    x0 = SB + 6
+    x1 = x0 + VC + 186 + 132
+    g = G(x1 + SR)
+    stem(g, x0, 0, CAP, VC)
+    g.add(rrect(x0, 124, x1, CAP - 110, tl=R, tr=175, br=175, bl=R))
+    g.cut(window(x0 + VC + 93, 186, 218, 300, CAP - 192, base="round"))
+    return g
+
+
+@glyph("þ")
+def low_thorn():
+    g = G(0)
+    x1 = bowl(g, SB, side="left")
+    minaret(g, SB)
+    stem(g, SB, DESC, 10)
+    g.adv = x1 + SR
+    return g
+
+
+@glyph("Ł")
+def cap_lslash():
+    x0 = 64
+    g = G(x0 + VC + 250)
+    stem(g, x0, 0, CAP, VC)
+    g.add(rrect(x0, 0, x0 + VC + 226, HB, R, R, R, R))
+    g.add(corbel(x0 + VC, HB, 1, 1, 112))
+    bar = rrect(10, 320, x0 + VC + 76, 412, R, R, R, R)
+    g.add(affinity.rotate(bar, 22, origin=(x0 + VC / 2, 366)))
+    return g
+
+
+@glyph("ł")
+def low_lslash():
+    x0 = 62
+    g = G(x0 * 2 + V)
+    minaret(g, x0)
+    bar = rrect(10, 260, x0 + V + 52, 348, R, R, R, R)
+    g.add(affinity.rotate(bar, 22, origin=(x0 + V / 2, 304)))
+    return g

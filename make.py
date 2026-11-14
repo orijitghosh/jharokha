@@ -6,52 +6,84 @@
 import os
 import re
 import sys
+import unicodedata
 import zipfile
 
 from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 from fontTools.ttLib import TTFont, newTable
 
-import accents  # noqa: F401  (adds the accented letters to letters.GLYPHS)
+import accents
 import build
+import letters
 
 CHARSET = ["ABCDEFGHIJKLM", "NOPQRSTUVWXYZ", "abcdefghijklm", "nopqrstuvwxyz",
-           "0123456789 ₹$%", ".,:;!?'\"-\u2013\u2014_()[]{}/\\|", "+=*#&@<>^~`"]
-ACCENTS = ["ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏ", "ÑÒÓÔÕÖØÙÚÛÜÝ", "àáâãäåçèéêëìíîïñ", "òóôõöøùúûüýÿ ¡¿",
+           "0123456789 ₹$€£%", ".,:;!?'\"\u2018\u2019\u201c\u201d\u2026\u2022\u00b0",
+           "-\u2013\u2014_()[]{}/\\| +=*#&@<>^~`"]
+ACCENTS = ["ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏ", "ÑÒÓÔÕÖØÙÚÛÜÝŸ", "àáâãäåçèéêëìíîïñ", "òóôõöøùúûüýÿ ¡¿",
+           "ÆæŒœ ß Ðð Þþ Łł",
            "ĀĒĪŌŪ ṚṜḶṄṬḌṆŚṢḤṀṂ", "āēīōū ṛṝḷṅṭḍṇśṣḥṁṃ", "ĆČŃŠŞŹŻŽ ćčńšşźżž",
            "Rāmāyaṇa Maṇḍala Gaṅgā", "Mahābhārata Prāṇāyāma", "Café señor über façade"]
 SAMPLE = ["Jharokha", "Namaste Dilli", "Chandni Chowk", "Taj Mahal, Agra",
           "Quick brown fox", "jumps over lazy dogs", "₹ 1,234,567.89 & more"]
 INK, PAPER = (28, 28, 32), (250, 247, 240)
+EXTRA_BASE = {"Ø": "O", "Œ": "O", "ø": "o", "œ": "o", "æ": "a", "Ł": "L"}
 
-# Pairs that need pulling together. Tall lowercase (b d h i j k l t) is left
-# out on purpose: its domes would run into the capital's overhang.
-KERN = """
-@low   = [a c d e g o q s];
-@lowx  = [a c d e g o q s m n p r u v w x y z];
-@stop  = [uni002E uni002C];
-feature kern {
-    pos T @lowx -96;
-    pos F @low -30;
-    pos [V W] @low -34;
-    pos Y @lowx -80;
-    pos [T V W Y F P] @stop -96;
-    pos [r v w y] @stop -50;
-    pos A [T V W Y] -46;
-    pos [T V W Y] A -46;
-    pos L [T V W Y] -84;
-    pos L [v w y] -40;
-    pos K [O C G Q o c e] -24;
-    pos f [a c d e g o q s] -18;
-    pos r [a c d e g o q s] -14;
-} kern;
+
+def _kern_fea():
+    """Build kerning rules covering base letters and their accented forms.
+    Tall lowercase (b d h i j k l t, ð) stays out so domes never hit T or Y."""
+    fam_all = {ch: [ch] for ch in letters.GLYPHS if ch.isascii() and ch.isalpha()}
+    fam_flat = {ch: [ch] for ch in fam_all}
+    fam_above = {ch: [] for ch in fam_all}
+    for ch in letters.GLYPHS:
+        if ch.isascii():
+            continue
+        parts = unicodedata.normalize("NFD", ch)
+        base = EXTRA_BASE.get(ch) or parts[0]
+        if base not in fam_all:
+            continue
+        fam_all[base].append(ch)
+        has_above = any(accents.MARKS.get(m, (None, None))[1] == "above" for m in parts[1:])
+        if base.islower() and has_above:
+            fam_above[base].append(ch)
+        else:
+            fam_flat[base].append(ch)
+
+    def cls(chars, pool=fam_all):
+        return "[" + " ".join(build.glyph_name(c) for b in chars for c in pool[b]) + "]"
+
+    return f"""
+@low        = {cls("acdegoqs")};
+@lowx_flat  = {cls("acdegoqsmnpruvwxyz", fam_flat)};
+@lowx_above = {cls("acdegoqsmnpruvwxyz", fam_above)};
+@tvwy       = {cls("TVWY")};
+@stop       = [uni002E uni002C uni2026];
+feature kern {{
+    pos {cls("T")} @lowx_flat -96;
+    pos {cls("T")} @lowx_above -52;
+    pos {cls("F")} @low -30;
+    pos {cls("P")} @low -28;
+    pos {cls("VW")} @low -34;
+    pos {cls("Y")} @lowx_flat -80;
+    pos {cls("Y")} @lowx_above -46;
+    pos {cls("TVWYFP")} @stop -96;
+    pos {cls("rvwy")} @stop -50;
+    pos {cls("A")} @tvwy -46;
+    pos @tvwy {cls("A")} -46;
+    pos {cls("L")} @tvwy -84;
+    pos {cls("L")} {cls("vwy")} -40;
+    pos {cls("K")} {cls("OCGQoce")} -24;
+    pos {cls("f")} @low -18;
+    pos {cls("r")} @low -14;
+}} kern;
 """
 
 
 def finish(ttf):
-    """Add kerning and the name records, then save TTF and WOFF."""
+    """Add kerning and the name records, then save TTF, WOFF and WOFF2."""
     font = TTFont(ttf)
     # kerning is written in 1000-unit ems; the file's grid is build.FINE times finer
-    kern = re.sub(r"-\d+(?=;)", lambda v: str(int(v.group()) * build.FINE), KERN)
+    kern = re.sub(r"-\d+(?=;)", lambda v: str(int(v.group()) * build.FINE), _kern_fea())
     addOpenTypeFeaturesFromString(font, kern)
     name = font["name"]
     for name_id, text in ((0, "Copyright 2026 Arijit Ghosh"),
@@ -75,13 +107,16 @@ def finish(ttf):
     font.save(ttf)
     font.flavor = "woff"
     font.save(ttf[:-4] + ".woff")
+    font.flavor = "woff2"
+    font.save(ttf[:-4] + ".woff2")
     embed(ttf[:-4] + ".woff")
 
 
 def pack():
     """Zip up what people download."""
     here = build.HERE
-    files = ["fonts/Jharokha-Regular.ttf", "fonts/Jharokha-Regular.woff", "fonts/README.txt",
+    files = ["fonts/Jharokha-Regular.ttf", "fonts/Jharokha-Regular.woff",
+             "fonts/Jharokha-Regular.woff2", "fonts/README.txt",
              "specimen.html", "OFL.txt"]
     with zipfile.ZipFile(os.path.join(here, "Jharokha-1.000.zip"), "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:

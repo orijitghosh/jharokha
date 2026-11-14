@@ -111,7 +111,7 @@ def alphabet():
         size = fit(raw, 1040, most=210)
         lines += f'<div class="jf" style="font-size:{size:.1f}px;color:{color}">{text}</div>'
     body = (j("Jharokha", 96, 80, 84, MAROON)
-            + small("Regular &nbsp;/&nbsp; 210 glyphs", 0, 112, MAROON, "right:80px;left:auto")
+            + small("Regular &nbsp;/&nbsp; 227 glyphs", 0, 112, MAROON, "right:80px;left:auto")
             + f'<div style="position:absolute;left:80px;top:230px;width:1040px;height:1400px;display:flex;'
               f'flex-direction:column;justify-content:space-between">{lines}</div>'
             + small("Capitals, lowercase, figures, punctuation, the rupee, and accents for European languages "

@@ -8,11 +8,12 @@
 <meta property="og:title" content="Jharokha">
 <meta property="og:description" content="A free display typeface built like Mughal architecture.">
 <meta property="og:image" content="https://orijitghosh.github.io/jharokha/promo/banner-wide.png">
-<link rel="preload" href="fonts/Jharokha-Regular.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="fonts/Jharokha-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <style>
   @font-face {
     font-family: "Jharokha";
-    src: url("fonts/Jharokha-Regular.woff") format("woff");
+    src: url("fonts/Jharokha-Regular.woff2") format("woff2"),
+         url("fonts/Jharokha-Regular.woff") format("woff");
     font-display: swap;
   }
   :root {
@@ -171,10 +172,11 @@
 <section class="use" id="use">
   <div class="label">Get it</div>
   <h2>Use it</h2>
-  <p>Download the zip, open it, and install <b>Jharokha-Regular.ttf</b>. For a website, use the woff file:</p>
+  <p>Download the zip, open it, and install <b>Jharokha-Regular.ttf</b>. For a website, use the woff2 file:</p>
 <pre>@font-face {
   font-family: "Jharokha";
-  src: url("Jharokha-Regular.woff") format("woff");
+  src: url("Jharokha-Regular.woff2") format("woff2"),
+       url("Jharokha-Regular.woff") format("woff");
 }
 h1 { font-family: "Jharokha", sans-serif; }</pre>
   <ul>
@@ -198,8 +200,9 @@ h1 { font-family: "Jharokha", sans-serif; }</pre>
   // character grid
   var sets = [
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz", "0123456789",
-    "₹$%&@#*+=<>^~.,:;!?¡¿'\"-_()[]{}/\\|",
-    "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝ", "àáâãäåçèéêëìíîïñòóôõöøùúûüýÿ",
+    "₹$€£%&@#*+=<>^~.,:;!?¡¿'\"‘’“”…•°-_()[]{}/\\|",
+    "ÀÁÂÃÄÅÆÇÐÈÉÊËÌÍÎÏŁÑÒÓÔÕÖØŒÙÚÛÜÝŸÞ",
+    "àáâãäåæçðèéêëìíîïłñòóôõöøœßùúûüýÿþ",
     "ĀĒĪŌŪṚṜḶṄṬḌṆŚṢḤṀṂ", "āēīōūṛṝḷṅṭḍṇśṣḥṁṃ", "ĆČŃŠŞŹŻŽćčńšşźżž"
   ];
   var grid = document.getElementById("grid"), n = 0;
@@ -211,7 +214,7 @@ h1 { font-family: "Jharokha", sans-serif; }</pre>
       n++;
     });
   });
-  document.getElementById("count").textContent = n + " shown here. The font has 210 glyphs in all.";
+  document.getElementById("count").textContent = n + " shown here. The font has 227 glyphs in all.";
 
   // tester
   var box = document.getElementById("box"), size = document.getElementById("size");

@@ -32,15 +32,14 @@ V, W, X, K and Y are made from the same arch turned upside down.
 
 ## What is in the font
 
-210 glyphs in one weight:
+227 glyphs in one weight:
 
-- A to Z, a to z, figures, punctuation
-- the rupee sign
-- accents for most Western European languages
+- A to Z, a to z, figures, punctuation (with curly quotes, ellipsis, bullet and degree)
+- currency signs (₹, $, €, £)
+- accents and letters for Western, Northern and Central European languages (including Æ, æ, Œ, œ, ß, Ð, ð, Þ, þ, Ł, ł, Ć, Č, Ń, Š, Ş, Ź, Ż, Ž)
 - the letters used to write Sanskrit and other Indian languages in Latin script (ā ī ū ṛ ṝ ḷ ṅ ñ ṭ ḍ ṇ ś ṣ ḥ ṁ ṃ)
-- a few Central European letters (ć č ń š ş ź ż ž)
 
-Not there yet: æ, œ, ß, ð, þ. Accented letters are not kerned. There is only one weight.
+There is one weight for now.
 
 It is meant for big sizes. Below about 24 px the small windows start to close up.
 
@@ -59,7 +58,7 @@ Full-size specimen posters are in [promo/](promo/).
 The letters are not drawn in a font editor. Each one is written as geometry in Python and the font file is generated from that. You need Python 3.10 or newer.
 
 ```
-pip install fonttools shapely pillow
+pip install fonttools shapely pillow brotli
 python make.py
 ```
 
