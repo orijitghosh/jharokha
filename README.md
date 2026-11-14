@@ -89,4 +89,4 @@ If you want to change a letter, find it in `letters.py`. Most of them are only a
 
 SIL Open Font License 1.1, see [OFL.txt](OFL.txt). You can use the font for anything, including commercial work, and you can modify and share it. It has to stay under the same licence and it cannot be sold on its own.
 
-Designed by Arijit Ghosh.
+Designed by [Arijit Ghosh](https://orijitghosh.github.io/).

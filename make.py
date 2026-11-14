@@ -94,11 +94,12 @@ def finish(ttf, weight_class):
     kern = re.sub(r"-\d+(?=;)", lambda v: str(int(v.group()) * build.FINE), _kern_fea())
     addOpenTypeFeaturesFromString(font, kern)
     name = font["name"]
-    for name_id, text in ((0, "Copyright 2026 Arijit Ghosh"),
+    for name_id, text in ((0, "Copyright 2026 Arijit Ghosh (https://orijitghosh.github.io/)"),
                           (13, "This Font Software is licensed under the SIL Open Font License, Version 1.1. "
                                "This license is available with a FAQ at: https://openfontlicense.org"),
                           (14, "https://openfontlicense.org"),
                           (9, "Arijit Ghosh"),
+                          (12, "https://orijitghosh.github.io/"),
                           (10, "A display face built like Mughal architecture: "
                                "onion-arch doorways, bud-shaped windows, minaret domes.")):
         name.setName(text, name_id, 3, 1, 0x409)

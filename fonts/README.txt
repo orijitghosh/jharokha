@@ -1,6 +1,6 @@
 JHAROKHA
 Version 1.000, November 2026
-Designed by Arijit Ghosh
+Designed by Arijit Ghosh (https://orijitghosh.github.io/)
 
 A display typeface in three weights. Latin letters built like Mughal
 architecture: onion-arch doorways, bud-shaped windows, minaret domes.
