@@ -14,7 +14,7 @@ from shapely.geometry import Point, Polygon
 
 import letters
 from engine import CAP, G, XH, cusped, rrect, window
-from letters import GLYPHS, OV, R, SB, V, dome, glyph, stem
+from letters import GLYPHS, dome, stem
 
 # Western European letters, then the letters used to write Indian languages
 # in Latin script (IAST / ISO 15919), then a few Central European ones.
@@ -23,7 +23,6 @@ COVER = ("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝŸàáâãäåçè
          "ĆćČčŃńŠšŞşŹźŻżŽž")
 
 GAP_LOW, GAP_CAP = 40, 30     # air between a letter and the mark above it
-BELOW = -OV - 38              # top of a mark under the baseline
 MIN_SB = 28                   # keep wide marks on I and i from touching neighbours
 WIDE_MARKS = {"̂", "̃", "̄", "̈", "̌"}
 
@@ -33,7 +32,10 @@ def _stroke(pts, scale):
 
 
 def _acute():
-    return Polygon([(-58, 0), (10, 0), (92, 142), (-26, 142)])
+    k = letters.K
+    b, t = round(34 * k), round(59 * k)
+    h = round(142 * (0.85 + 0.15 * k))
+    return Polygon([(-24 - b, 0), (-24 + b, 0), (33 + t, h), (33 - t, h)])
 
 
 def _grave():
@@ -41,23 +43,35 @@ def _grave():
 
 
 def _circumflex():
-    return Polygon([(-132, 0), (-56, 0), (0, 64), (56, 0), (132, 0), (0, 146)])
+    k = letters.K
+    span = round(132 * (0.90 + 0.10 * k))
+    fw = round(76 * k)
+    h = round(146 * (0.88 + 0.12 * k))
+    yi = h - round(82 * k)
+    return Polygon([(-span, 0), (-span + fw, 0), (0, yi), (span - fw, 0), (span, 0), (0, h)])
 
 
 def _caron():
-    return affinity.scale(_circumflex(), yfact=-1, origin=(0, 73))
+    c = _circumflex()
+    return affinity.scale(c, yfact=-1, origin=(0, c.bounds[3] / 2))
 
 
 def _dieresis():
-    return dome(-72, 0, 96).union(dome(72, 0, 96))
+    k = letters.K
+    dw = round(96 * (0.15 + 0.85 * k))
+    dx = round(72 * (0.88 + 0.12 * k))
+    return dome(-dx, 0, dw).union(dome(dx, 0, dw))
 
 
 def _dot():
-    return dome(0, 0, 112)
+    return dome(0, 0, round(112 * (0.15 + 0.85 * letters.K)))
 
 
 def _macron():
-    return rrect(-124, 22, 124, 104, R, R, R, R)
+    k, r = letters.K, letters.R
+    hw = round(124 * (0.90 + 0.10 * k))
+    th = round(82 * k)
+    return rrect(-hw, 22, hw, 22 + th, r, r, r, r)
 
 
 def _tilde():
@@ -65,12 +79,17 @@ def _tilde():
 
 
 def _ring():
-    return Point(0, 80).buffer(80, 32).difference(Point(0, 80).buffer(30, 32))
+    k = letters.K
+    ro = round(80 * (0.88 + 0.12 * k))
+    ri = ro - round(50 * k)
+    return Point(0, ro).buffer(ro, 32).difference(Point(0, ro).buffer(ri, 32))
 
 
 def _cedilla():
-    # a short heavy tail, drawn like the comma so it stays clear at this weight
-    return Polygon([(-40, 20), (44, 20), (44, -64), (-8, -156), (-70, -156), (-22, -64), (-40, -64)])
+    # a short heavy tail, drawn like the comma so it stays clear at every weight
+    k = letters.K
+    base = Polygon([(-40, 20), (44, 20), (44, -64), (-8, -156), (-70, -156), (-22, -64), (-40, -64)])
+    return affinity.scale(base, xfact=k, yfact=0.80 + 0.20 * k, origin=(0, 20))
 
 
 # combining mark -> (shape, where): "above", "below", or "hang" (joined on)
@@ -83,24 +102,24 @@ MARKS = {
     "̧": (_cedilla, "hang"),
 }
 
-# where a mark below sits when the letter is not symmetrical
-STEM_X = {"r": SB + V / 2}
-
 
 def _dotless_i():
-    g = G(SB * 2 + V)
-    stem(g, SB, 0, XH)
+    g = G(letters.SB * 2 + letters.V)
+    stem(g, letters.SB, 0, XH)
     return g
 
 
 def _short_A():
     """Capital A with a slightly tucked finial so marks align with E, I, O, U."""
-    x0, w = 30, 548
+    k = letters.K
+    x0 = round(30 + 8 * (1 - k))
+    w = round(548 * letters.WS)
     cx = x0 + w / 2
     g = G(w + 2 * x0)
     g.add(window(cx, w, 0, 270, CAP + 16))
-    g.cut(cusped(cx, 218, -20, 108, 258))
-    g.cut(window(cx, 146, 344, 424, 548, base="round"))
+    g.cut(cusped(cx, w - 2 * round(165 * k), -20, 108, round(258 + 56 * (1 - k))))
+    g.cut(window(cx, round(146 + 112 * (1 - k)), round(344 - 14 * (1 - k)),
+                 round(424 + 22 * (1 - k)), round(548 + 66 * (1 - k)), base="round"))
     return g
 
 
@@ -121,6 +140,7 @@ def _compose(ch):
         cx = (x0 + x1) / 2
         g = G(src.adv).add(geo)
         y = (CAP + 24) if (base == "A" and above) else (top + (GAP_CAP if base.isupper() else GAP_LOW))
+        below = -letters.OV - 38
         for m in marks:
             fn, where = MARKS[m]
             shape = fn()
@@ -133,7 +153,8 @@ def _compose(ch):
                 y = shape.bounds[3] + y + 26            # the next mark stacks on top
             elif where == "below":
                 h = shape.bounds[3]
-                g.add(affinity.translate(shape, STEM_X.get(base, cx), BELOW - h))
+                sx = (letters.SB + letters.V / 2) if base == "r" else cx
+                g.add(affinity.translate(shape, sx, below - h))
             else:
                 g.add(affinity.translate(shape, cx, 0))
         full = g.geometry()
@@ -156,7 +177,7 @@ def _slashed(base):
         geo = src.geometry()
         x0, y0, x1, y1 = geo.bounds
         g = G(src.adv).add(geo)
-        g.add(letters.diag(x1 - 40, y1 + 46, x0 + 40, y0 - 46, 74))
+        g.add(letters.diag(x1 - 40, y1 + 46, x0 + 40, y0 - 46, round(74 * letters.K)))
         return g
     return make
 

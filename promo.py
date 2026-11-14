@@ -15,8 +15,8 @@ import tempfile
 from fontTools.ttLib import TTFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-TTF = os.path.join(HERE, "fonts", "Jharokha-Regular.ttf")
-WOFF = os.path.join(HERE, "fonts", "Jharokha-Regular.woff")
+TTF = os.path.join(HERE, "fonts", "Jharokha-Black.ttf")
+WOFF = os.path.join(HERE, "fonts", "Jharokha-Black.woff")
 OUT = os.path.join(HERE, "promo")
 BROWSERS = [r"C:\Program Files\Google\Chrome\Application\chrome.exe",
             r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
@@ -70,8 +70,8 @@ def hero():
     body = (f'<div style="position:absolute;left:{w / 2 - 430}px;top:300px;width:860px;height:860px;border-radius:50%;'
             f'background:radial-gradient(circle at 50% 38%,{SAFFRON},{ORANGE} 78%)"></div>'
             + j("A", a, ax, 330, IVORY)
-            + small("Jharokha Regular", 80, 70, SAFFRON)
-            + small("Version 1.000 &nbsp;/&nbsp; 2026", 0, 70, SAFFRON, f"right:80px;left:auto")
+            + small("Jharokha", 80, 70, SAFFRON)
+            + small("3 weights &nbsp;/&nbsp; Version 1.000", 0, 70, SAFFRON, f"right:80px;left:auto")
             + j("Jharokha", word, (w - 900) / 2, 1290, SAFFRON)
             + small("A display typeface built like Mughal architecture", 0, 1500, IVORY,
                     f"width:{w}px;text-align:center")
@@ -111,7 +111,7 @@ def alphabet():
         size = fit(raw, 1040, most=210)
         lines += f'<div class="jf" style="font-size:{size:.1f}px;color:{color}">{text}</div>'
     body = (j("Jharokha", 96, 80, 84, MAROON)
-            + small("Regular &nbsp;/&nbsp; 227 glyphs", 0, 112, MAROON, "right:80px;left:auto")
+            + small("3 weights &nbsp;/&nbsp; 227 glyphs", 0, 112, MAROON, "right:80px;left:auto")
             + f'<div style="position:absolute;left:80px;top:230px;width:1040px;height:1400px;display:flex;'
               f'flex-direction:column;justify-content:space-between">{lines}</div>'
             + small("Capitals, lowercase, figures, punctuation, the rupee, and accents for European languages "
@@ -125,7 +125,7 @@ def anatomy():
              ("o", "Bud", "Round letters are solid blocks with a window shaped like a lotus bud."),
              ("i", "Dome", "Tall stems end in a small onion dome, and so do the dots and the full stop."),
              ("A", "Cusps", "The doorways of A, H and M are scalloped, and A carries a pointed finial.")]
-    body = j("Built like a building", 104, 90, 92, IVORY) + small("Jharokha Regular", 0, 122, SAFFRON, "right:90px;left:auto")
+    body = j("Built like a building", 104, 90, 92, IVORY) + small("Jharokha Black", 0, 122, SAFFRON, "right:90px;left:auto")
     col = (w - 180) / 4
     for k, (glyph, name, text) in enumerate(parts):
         x = 90 + k * col
@@ -185,7 +185,7 @@ def mela():
     mela_size = fit("MELA", 1040)
     y2 = 170 + big * 0.92
     y3 = y2 + mela_size * 0.82
-    body = (small("Sample setting &nbsp;/&nbsp; Jharokha Regular", 80, 80, MAROON)
+    body = (small("Sample setting &nbsp;/&nbsp; Jharokha Black", 80, 80, MAROON)
             + j("Monsoon", big, 80, 170, MAROON)
             + j("MELA", mela_size, 80, y2, IVORY)
             + f'<div style="position:absolute;left:0;top:{y3:.0f}px;width:{w}px;height:{h - y3:.0f}px;background:{INDIGO}"></div>'

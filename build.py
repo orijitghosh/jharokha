@@ -1,7 +1,6 @@
-"""Build the font files and a proof image.   python build.py ["proof text" ...]"""
+"""Build a single Jharokha font file and render proof images."""
 import importlib
 import os
-import sys
 
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
@@ -11,7 +10,6 @@ import engine
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FAMILY = "Jharokha"
-STYLE = "Regular"
 # The letters are drawn on a 1000-unit em. The font file uses a grid FINE
 # times finer, so curves stay smooth when a letter fills a poster.
 FINE = 4
@@ -27,7 +25,7 @@ def glyph_name(ch):
     return "uni%04X" % ord(ch)
 
 
-def build(out_path, glyphs_mod="letters"):
+def build(out_path, glyphs_mod="letters", style="Regular", weight_class=400):
     mod = importlib.import_module(glyphs_mod)
     order, cmap, glyf, hmtx = [".notdef"], {}, {}, {}
 
@@ -63,23 +61,38 @@ def build(out_path, glyphs_mod="letters"):
         glyf[name] = pen.glyph()
         hmtx[name] = (round(g.adv * FINE), xmin or 0)
 
+    is_bold = style == "Bold"
+    # Legacy Windows apps only group Regular + Bold under one family name;
+    # Black gets its own RIBBI family plus nameID 16/17 for modern apps.
+    ribbi_family = FAMILY if style in ("Regular", "Bold") else f"{FAMILY} {style}"
+    ribbi_style = "Bold" if is_bold else "Regular"
+    names = {
+        "familyName": ribbi_family,
+        "styleName": ribbi_style,
+        "uniqueFontIdentifier": f"{FAMILY}-{style}:1.000",
+        "fullName": f"{FAMILY} {style}",
+        "psName": f"{FAMILY}-{style}",
+        "version": "Version 1.000",
+    }
+    if style not in ("Regular", "Bold"):
+        names["typographicFamily"] = FAMILY
+        names["typographicSubfamily"] = style
+
     fb = FontBuilder(engine.UPM * FINE, isTTF=True)
     fb.setupGlyphOrder(order)
     fb.setupCharacterMap(cmap)
     fb.setupGlyf(glyf)
     fb.setupHorizontalMetrics(hmtx)
     fb.setupHorizontalHeader(ascent=900 * FINE, descent=-300 * FINE)
-    # Windows will not install a font without a full name, a unique ID and
-    # a PostScript name.
-    fb.setupNameTable({"familyName": FAMILY, "styleName": STYLE,
-                       "uniqueFontIdentifier": f"{FAMILY}-{STYLE}:1.000",
-                       "fullName": f"{FAMILY} {STYLE}", "psName": f"{FAMILY}-{STYLE}",
-                       "version": "Version 1.000"})
+    fb.setupNameTable(names)
     fb.setupOS2(sTypoAscender=900 * FINE, sTypoDescender=-300 * FINE, sTypoLineGap=0,
                 usWinAscent=940 * FINE, usWinDescent=300 * FINE,
                 sxHeight=engine.XH * FINE, sCapHeight=engine.CAP * FINE,
-                fsSelection=0x40, achVendID="NONE", fsType=0)
+                usWeightClass=weight_class,
+                fsSelection=0x20 if is_bold else 0x40, achVendID="NONE", fsType=0)
     fb.setupPost()
+    if is_bold:
+        fb.font["head"].macStyle = 0x01
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     fb.save(out_path)
     return len(order) - 1
@@ -96,6 +109,3 @@ def proof(font_path, lines, out_path, size=150, pad=50,
         d.text((pad, pad + i * line_h), t, font=font, fill=ink)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     img.save(out_path)
-
-
-# Run make.py to build the font and its proof sheets.

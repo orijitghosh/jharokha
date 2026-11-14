@@ -4,16 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jharokha, a display typeface built like Mughal architecture</title>
-<meta name="description" content="Jharokha is a free display font. Latin letters with onion-arch doorways, bud windows and minaret domes.">
+<meta name="description" content="Jharokha is a free display font in three weights. Latin letters with onion-arch doorways, bud windows and minaret domes.">
 <meta property="og:title" content="Jharokha">
-<meta property="og:description" content="A free display typeface built like Mughal architecture.">
+<meta property="og:description" content="A free display typeface in three weights, built like Mughal architecture.">
 <meta property="og:image" content="https://orijitghosh.github.io/jharokha/promo/banner-wide.png">
-<link rel="preload" href="fonts/Jharokha-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Jharokha-Black.woff2" as="font" type="font/woff2" crossorigin>
 <style>
   @font-face {
     font-family: "Jharokha";
+    font-weight: 400;
     src: url("fonts/Jharokha-Regular.woff2") format("woff2"),
          url("fonts/Jharokha-Regular.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Jharokha";
+    font-weight: 700;
+    src: url("fonts/Jharokha-Bold.woff2") format("woff2"),
+         url("fonts/Jharokha-Bold.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Jharokha";
+    font-weight: 900;
+    src: url("fonts/Jharokha-Black.woff2") format("woff2"),
+         url("fonts/Jharokha-Black.woff") format("woff");
     font-display: swap;
   }
   :root {
@@ -24,11 +39,11 @@
   * { box-sizing: border-box; margin: 0; }
   html { scroll-behavior: smooth; }
   body { background: var(--ivory); color: var(--maroon); font: 18px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; }
-  .j { font-family: "Jharokha", Impact, sans-serif; font-weight: normal; line-height: 1; }
+  .j { font-family: "Jharokha", Impact, sans-serif; font-weight: 900; line-height: 1; }
   a { color: inherit; }
   section, header, footer { padding: clamp(48px, 8vw, 110px) var(--pad); }
   .label { font-size: 13px; font-weight: 600; letter-spacing: .28em; text-transform: uppercase; margin-bottom: 14px; }
-  h2 { font-family: "Jharokha", Impact, sans-serif; font-weight: normal; font-size: clamp(36px, 6vw, 84px); line-height: 1; margin-bottom: .5em; }
+  h2 { font-family: "Jharokha", Impact, sans-serif; font-weight: 900; font-size: clamp(36px, 6vw, 84px); line-height: 1; margin-bottom: .5em; }
   p { max-width: 38em; }
 
   /* top */
@@ -49,25 +64,42 @@
   .arcade span { display: block; transform: translateY(-.01em); margin-left: -.05em; }
 
   /* try it */
-  .try { background: var(--saffron); }
-  .try textarea { display: block; width: 100%; border: 0; border-bottom: 4px solid var(--maroon); background: transparent;
-                  color: var(--maroon); font-family: "Jharokha", Impact, sans-serif; font-size: 110px; line-height: 1.1;
+  .try { --bg: #ffb627; --fg: #5c1020; background: var(--bg); color: var(--fg); }
+  .try textarea { display: block; width: 100%; border: 0; border-bottom: 4px solid var(--fg); background: transparent;
+                  color: var(--fg); font-family: "Jharokha", Impact, sans-serif; font-weight: 900; font-size: 110px; line-height: 1.1;
                   padding: .1em 0 .15em; outline: none; resize: none; overflow: hidden; }
-  .controls { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; margin-top: 22px; }
-  .controls input[type=range] { width: min(320px, 60vw); accent-color: var(--maroon); }
-  .swatch { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--maroon); cursor: pointer; padding: 0; }
+  .controls { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 22px; }
+  .controls .label { margin-bottom: 0; }
+  .controls input[type=range] { width: min(260px, 54vw); accent-color: var(--fg); }
+  .wgroup { display: inline-flex; gap: 6px; }
+  .wbtn { font: 600 12px/1 "Segoe UI", system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase;
+          padding: 9px 13px; border-radius: 4px; border: 2px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
+  .try .wbtn.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .swatches { display: inline-flex; gap: 10px; align-items: center; }
+  .swatch { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--fg); cursor: pointer; padding: 0; }
 
   /* parts */
   .parts { background: var(--teal); color: var(--ivory); }
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-top: 30px; }
   .card .glyph { font-size: clamp(190px, 22vw, 300px); color: var(--saffron); height: 1em; }
-  .card h3 { font-family: "Jharokha", Impact, sans-serif; font-weight: normal; font-size: 44px; line-height: 1;
+  .card h3 { font-family: "Jharokha", Impact, sans-serif; font-weight: 900; font-size: 44px; line-height: 1;
              border-top: 2px solid rgba(248, 238, 219, .45); padding-top: 22px; margin: 26px 0 12px; }
   .card p { font-size: 17px; opacity: .92; }
 
+  /* weights */
+  .weights { background: var(--maroon); color: var(--ivory); }
+  .weights h2 { color: var(--saffron); }
+  .wstack { display: grid; gap: 34px; margin-top: 36px; }
+  .wrow { border-top: 1px solid rgba(248, 238, 219, .24); padding-top: 22px; }
+  .wrow .meta { font-size: 13px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--saffron); margin-bottom: 10px; }
+  .wrow .spec { font-family: "Jharokha", Impact, sans-serif; font-size: clamp(30px, 5.2vw, 76px); line-height: 1.08; }
+  .wrow .small { font-family: "Jharokha", Impact, sans-serif; font-weight: 400; font-size: 20px; line-height: 1.5; margin-top: 12px; opacity: .88; max-width: none; }
+
   /* glyphs */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 6px; margin-top: 26px; }
-  .grid div { font-family: "Jharokha", Impact, sans-serif; font-size: 42px; line-height: 1; aspect-ratio: 1; display: grid;
+  .charset-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 18px; }
+  .charset-bar .wbtn.on { background: var(--maroon); color: var(--ivory); border-color: var(--maroon); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 6px; margin-top: 26px; font-weight: 900; }
+  .grid div { font-family: "Jharokha", Impact, sans-serif; font-weight: inherit; font-size: 42px; line-height: 1; aspect-ratio: 1; display: grid;
               place-items: center; background: #fff7e8; border-radius: 4px; transition: background .15s, color .15s; }
   .grid div:hover { background: var(--maroon); color: var(--saffron); }
   .count { margin-top: 20px; font-size: 15px; opacity: .8; }
@@ -95,11 +127,11 @@
 
 <header class="hero">
   <div class="nav label">
-    <span>Regular, version 1.000</span>
+    <span>3 weights, version 1.000</span>
     <a href="https://github.com/orijitghosh/jharokha">GitHub</a>
   </div>
   <h1 class="j">Jharokha</h1>
-  <p>A free display typeface. The letters are Latin, but they are built like Mughal buildings,
+  <p>A free display typeface in three weights. The letters are Latin, but they are built like Mughal buildings,
      with arched doorways, bud shaped windows and small domes.</p>
   <div class="buttons">
     <a class="btn" href="Jharokha-1.000.zip" download>Download the font</a>
@@ -112,12 +144,19 @@
   <div class="label">Type something</div>
   <textarea id="box" class="j" rows="1" spellcheck="false" aria-label="Try the font">Namaste Dilli</textarea>
   <div class="controls">
+    <div class="wgroup" role="group" aria-label="Weight">
+      <button type="button" class="wbtn" data-try-w="400">Regular</button>
+      <button type="button" class="wbtn" data-try-w="700">Bold</button>
+      <button type="button" class="wbtn on" data-try-w="900">Black</button>
+    </div>
     <label class="label" for="size">Size</label>
-    <input id="size" type="range" min="28" max="260" value="110">
-    <button class="swatch" style="background:#ffb627" data-bg="#ffb627" data-fg="#5c1020" aria-label="Saffron"></button>
-    <button class="swatch" style="background:#171a45" data-bg="#171a45" data-fg="#ee7b93" aria-label="Indigo"></button>
-    <button class="swatch" style="background:#0c5a5a" data-bg="#0c5a5a" data-fg="#f8eedb" aria-label="Teal"></button>
-    <button class="swatch" style="background:#f8eedb" data-bg="#f8eedb" data-fg="#e2572b" aria-label="Ivory"></button>
+    <input id="size" type="range" min="18" max="260" value="110">
+    <div class="swatches">
+      <button class="swatch" style="background:#ffb627" data-bg="#ffb627" data-fg="#5c1020" aria-label="Saffron"></button>
+      <button class="swatch" style="background:#171a45" data-bg="#171a45" data-fg="#ee7b93" aria-label="Indigo"></button>
+      <button class="swatch" style="background:#0c5a5a" data-bg="#0c5a5a" data-fg="#f8eedb" aria-label="Teal"></button>
+      <button class="swatch" style="background:#f8eedb" data-bg="#f8eedb" data-fg="#e2572b" aria-label="Ivory"></button>
+    </div>
   </div>
 </section>
 
@@ -139,11 +178,41 @@
   </div>
 </section>
 
+<section class="weights">
+  <div class="label">Family</div>
+  <h2>Three weights</h2>
+  <p>Lighter weights thin the masonry and widen the doorways and windows, so the architecture stays readable even when the type gets small.</p>
+  <div class="wstack">
+    <div class="wrow">
+      <div class="meta">Regular 400</div>
+      <div class="spec" style="font-weight:400">Chandni Chowk &amp; Rāmāyaṇa ₹1,648</div>
+      <p class="small">At 20 px: Old Delhi doorways, lotus-bud windows &amp; minaret domes stay open for subheads, menus and captions.</p>
+    </div>
+    <div class="wrow">
+      <div class="meta">Bold 700</div>
+      <div class="spec" style="font-weight:700">Chandni Chowk &amp; Rāmāyaṇa ₹1,648</div>
+    </div>
+    <div class="wrow">
+      <div class="meta">Black 900</div>
+      <div class="spec" style="font-weight:900">Chandni Chowk &amp; Rāmāyaṇa ₹1,648</div>
+    </div>
+  </div>
+</section>
+
 <section>
-  <div class="label">Character set</div>
-  <h2>What is in the box</h2>
-  <p>Capitals, lowercase, figures, punctuation, the rupee sign, accents for most Western European
-     languages, and the dotted letters you need to write Sanskrit in Latin script.</p>
+  <div class="charset-bar">
+    <div>
+      <div class="label">Character set</div>
+      <h2>What is in the box</h2>
+      <p>Capitals, lowercase, figures, punctuation, currency signs (₹, $, €, £), European letters and accents,
+         and the dotted letters you need to write Sanskrit in Latin script.</p>
+    </div>
+    <div class="wgroup" role="group" aria-label="Grid weight">
+      <button type="button" class="wbtn" data-grid-w="400">Regular</button>
+      <button type="button" class="wbtn" data-grid-w="700">Bold</button>
+      <button type="button" class="wbtn on" data-grid-w="900">Black</button>
+    </div>
+  </div>
   <div class="grid" id="grid"></div>
   <p class="count" id="count"></p>
 </section>
@@ -172,17 +241,26 @@
 <section class="use" id="use">
   <div class="label">Get it</div>
   <h2>Use it</h2>
-  <p>Download the zip, open it, and install <b>Jharokha-Regular.ttf</b>. For a website, use the woff2 file:</p>
+  <p>Download the zip, open it, and install the three <b>.ttf</b> files (Regular, Bold, Black). For a website, load the woff2 files:</p>
 <pre>@font-face {
   font-family: "Jharokha";
-  src: url("Jharokha-Regular.woff2") format("woff2"),
-       url("Jharokha-Regular.woff") format("woff");
+  font-weight: 400;
+  src: url("Jharokha-Regular.woff2") format("woff2");
 }
-h1 { font-family: "Jharokha", sans-serif; }</pre>
+@font-face {
+  font-family: "Jharokha";
+  font-weight: 700;
+  src: url("Jharokha-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Jharokha";
+  font-weight: 900;
+  src: url("Jharokha-Black.woff2") format("woff2");
+}
+h1 { font-family: "Jharokha", sans-serif; font-weight: 900; }</pre>
   <ul>
-    <li>It is a display font. Use it for headlines, posters, logos, packaging and signs.</li>
-    <li>It looks best at 24 px and above. Smaller than that and the little windows fill in.</li>
-    <li>There is one weight for now.</li>
+    <li><b>Black (900)</b> is built for 24 px and up: posters, titles, book covers, packaging and signs.</li>
+    <li><b>Bold (700)</b> and <b>Regular (400)</b> open up the counters so subheads, buttons and menus stay clear down to 18 px.</li>
   </ul>
   <div class="buttons" style="margin-bottom:0">
     <a class="btn" style="background:var(--maroon);border-color:var(--maroon);color:var(--ivory)" href="Jharokha-1.000.zip" download>Download the font</a>
@@ -214,7 +292,7 @@ h1 { font-family: "Jharokha", sans-serif; }</pre>
       n++;
     });
   });
-  document.getElementById("count").textContent = n + " shown here. The font has 227 glyphs in all.";
+  document.getElementById("count").textContent = n + " shown here. Each weight has 227 glyphs in all.";
 
   // tester
   var box = document.getElementById("box"), size = document.getElementById("size");
@@ -228,12 +306,25 @@ h1 { font-family: "Jharokha", sans-serif; }</pre>
   size.addEventListener("input", resize);
   box.addEventListener("input", grow);
   window.addEventListener("resize", resize);
+  document.querySelectorAll("[data-try-w]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll("[data-try-w]").forEach(function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      box.style.fontWeight = b.dataset.tryW;
+      grow();
+    });
+  });
+  document.querySelectorAll("[data-grid-w]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll("[data-grid-w]").forEach(function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      grid.style.fontWeight = b.dataset.gridW;
+    });
+  });
   document.querySelectorAll(".swatch").forEach(function (b) {
     b.addEventListener("click", function () {
-      tryPanel.style.background = b.dataset.bg;
-      tryPanel.style.color = b.dataset.fg;
-      box.style.color = b.dataset.fg;
-      box.style.borderColor = b.dataset.fg;
+      tryPanel.style.setProperty("--bg", b.dataset.bg);
+      tryPanel.style.setProperty("--fg", b.dataset.fg);
     });
   });
   if (document.fonts && document.fonts.ready) { document.fonts.ready.then(resize); }
