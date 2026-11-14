@@ -18,7 +18,7 @@ CHARSET = ["ABCDEFGHIJKLM", "NOPQRSTUVWXYZ", "abcdefghijklm", "nopqrstuvwxyz",
            "0123456789 ₹$%", ".,:;!?'\"-\u2013\u2014_()[]{}/\\|", "+=*#&@<>^~`"]
 ACCENTS = ["ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏ", "ÑÒÓÔÕÖØÙÚÛÜÝ", "àáâãäåçèéêëìíîïñ", "òóôõöøùúûüýÿ ¡¿",
            "ĀĒĪŌŪ ṚṜḶṄṬḌṆŚṢḤṀṂ", "āēīōū ṛṝḷṅṭḍṇśṣḥṁṃ", "ĆČŃŠŞŹŻŽ ćčńšşźżž",
-           "Rāmāyaṇa Kṛṣṇa Śiva", "Mahābhārata Gaṇeśa", "Café señor über façade"]
+           "Rāmāyaṇa Maṇḍala Gaṅgā", "Mahābhārata Prāṇāyāma", "Café señor über façade"]
 SAMPLE = ["Jharokha", "Namaste Dilli", "Chandni Chowk", "Taj Mahal, Agra",
           "Quick brown fox", "jumps over lazy dogs", "₹ 1,234,567.89 & more"]
 INK, PAPER = (28, 28, 32), (250, 247, 240)

@@ -166,7 +166,7 @@ def cities():
 
 def sanskrit():
     w, h = 1200, 1800
-    words = [("Rāmāyaṇa", MAROON), ("Mahābhārata", INDIGO), ("Kṛṣṇa", MAROON), ("Śiva Gaṇeśa", INDIGO), ("Aṣṭāṅga", MAROON)]
+    words = [("Rāmāyaṇa", MAROON), ("Mahābhārata", INDIGO), ("Prāṇāyāma", MAROON), ("Nirvāṇa Gaṅgā", INDIGO), ("Maṇḍala", MAROON)]
     lines = ""
     for text, color in words:
         size = fit(text, 1040, most=300)
