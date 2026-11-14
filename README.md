@@ -52,7 +52,7 @@ It is meant for big sizes. Below about 24 px the small windows start to close up
 <img src="promo/poster-6-sample-mela.png" width="30%" alt="Sample event poster">
 </p>
 
-There are more in [promo/](promo/), with a square one for social posts.
+Full-size specimen posters are in [promo/](promo/).
 
 ## Building it yourself
 
@@ -82,7 +82,7 @@ The posters are made with `python promo.py`. That one needs Chrome or Edge insta
 | `accents.py` | Accented letters, put together from a base letter and marks |
 | `build.py` | Turns the shapes into a TrueType font |
 | `make.py` | Runs the build, adds kerning, writes proofs and the zip |
-| `promo.py` | Posters and social images |
+| `promo.py` | Specimen posters and banner |
 
 If you want to change a letter, find it in `letters.py`. Most of them are only a few lines.
 
