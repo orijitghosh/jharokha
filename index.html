@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jharokha, a display typeface built like Mughal architecture</title>
+<meta name="description" content="Jharokha is a free display font. Latin letters with onion-arch doorways, bud windows and minaret domes.">
+<meta property="og:title" content="Jharokha">
+<meta property="og:description" content="A free display typeface built like Mughal architecture.">
+<meta property="og:image" content="https://orijitghosh.github.io/jharokha/promo/banner-wide.png">
+<link rel="preload" href="fonts/Jharokha-Regular.woff" as="font" type="font/woff" crossorigin>
+<style>
+  @font-face {
+    font-family: "Jharokha";
+    src: url("fonts/Jharokha-Regular.woff") format("woff");
+    font-display: swap;
+  }
+  :root {
+    --maroon: #5c1020; --deep: #3d0914; --saffron: #ffb627; --orange: #e2572b;
+    --ivory: #f8eedb; --indigo: #171a45; --teal: #0c5a5a; --pink: #ee7b93;
+    --pad: clamp(20px, 6vw, 90px);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ivory); color: var(--maroon); font: 18px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; }
+  .j { font-family: "Jharokha", Impact, sans-serif; font-weight: normal; line-height: 1; }
+  a { color: inherit; }
+  section, header, footer { padding: clamp(48px, 8vw, 110px) var(--pad); }
+  .label { font-size: 13px; font-weight: 600; letter-spacing: .28em; text-transform: uppercase; margin-bottom: 14px; }
+  h2 { font-family: "Jharokha", Impact, sans-serif; font-weight: normal; font-size: clamp(36px, 6vw, 84px); line-height: 1; margin-bottom: .5em; }
+  p { max-width: 38em; }
+
+  /* top */
+  .hero { background: radial-gradient(circle at 50% 35%, var(--maroon), var(--deep) 85%); color: var(--ivory);
+          padding-bottom: 0; overflow: hidden; }
+  .nav { display: flex; justify-content: space-between; align-items: center; color: var(--saffron); }
+  .nav a { text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .hero h1 { font-size: clamp(64px, 19.5vw, 330px); color: var(--saffron); margin: .32em 0 .12em -.03em; }
+  .hero p { font-size: clamp(18px, 2.2vw, 26px); max-width: 30em; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 14px; margin: 34px 0 70px; }
+  .btn { display: inline-block; padding: 14px 26px; border-radius: 4px; font-weight: 600; text-decoration: none;
+         background: var(--saffron); color: var(--deep); border: 2px solid var(--saffron); }
+  .btn.line { background: transparent; color: var(--saffron); }
+  .btn:hover { filter: brightness(1.08); }
+  .arcade { font-size: clamp(90px, 15vw, 210px); color: var(--orange); white-space: nowrap; letter-spacing: -.1em;
+            margin: 0 calc(-1 * var(--pad)); height: .8em; overflow: hidden; user-select: none; }
+  .arcade span { display: block; transform: translateY(-.01em); margin-left: -.05em; }
+
+  /* try it */
+  .try { background: var(--saffron); }
+  .try textarea { display: block; width: 100%; border: 0; border-bottom: 4px solid var(--maroon); background: transparent;
+                  color: var(--maroon); font-family: "Jharokha", Impact, sans-serif; font-size: 110px; line-height: 1.1;
+                  padding: .1em 0 .15em; outline: none; resize: none; overflow: hidden; }
+  .controls { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; margin-top: 22px; }
+  .controls input[type=range] { width: min(320px, 60vw); accent-color: var(--maroon); }
+  .swatch { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--maroon); cursor: pointer; padding: 0; }
+
+  /* parts */
+  .parts { background: var(--teal); color: var(--ivory); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-top: 30px; }
+  .card .glyph { font-size: clamp(190px, 22vw, 300px); color: var(--saffron); height: 1em; }
+  .card h3 { font-family: "Jharokha", Impact, sans-serif; font-weight: normal; font-size: 44px; line-height: 1;
+             border-top: 2px solid rgba(248, 238, 219, .45); padding-top: 22px; margin: 26px 0 12px; }
+  .card p { font-size: 17px; opacity: .92; }
+
+  /* glyphs */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 6px; margin-top: 26px; }
+  .grid div { font-family: "Jharokha", Impact, sans-serif; font-size: 42px; line-height: 1; aspect-ratio: 1; display: grid;
+              place-items: center; background: #fff7e8; border-radius: 4px; transition: background .15s, color .15s; }
+  .grid div:hover { background: var(--maroon); color: var(--saffron); }
+  .count { margin-top: 20px; font-size: 15px; opacity: .8; }
+
+  /* sanskrit */
+  .sans { background: var(--pink); }
+  .sans .words { font-size: clamp(40px, 9.5vw, 150px); line-height: 1.3; margin: .2em 0; }
+  .sans .words span { color: var(--indigo); }
+
+  /* posters */
+  .posters { background: var(--indigo); color: var(--ivory); }
+  .wall { columns: 3 260px; column-gap: 18px; margin-top: 30px; }
+  .wall a { display: block; margin-bottom: 18px; break-inside: avoid; }
+  .wall img { display: block; width: 100%; height: auto; border-radius: 3px; }
+
+  /* use */
+  pre { background: var(--deep); color: var(--ivory); padding: 22px; border-radius: 4px; overflow-x: auto;
+        font: 15px/1.6 Consolas, Menlo, monospace; max-width: 44em; margin: 22px 0; }
+  .use li { margin: 6px 0; max-width: 38em; }
+  footer { background: var(--deep); color: var(--ivory); font-size: 15px; }
+  footer .j { font-size: 54px; color: var(--saffron); margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="nav label">
+    <span>Regular, version 1.000</span>
+    <a href="https://github.com/orijitghosh/jharokha">GitHub</a>
+  </div>
+  <h1 class="j">Jharokha</h1>
+  <p>A free display typeface. The letters are Latin, but they are built like Mughal buildings,
+     with arched doorways, bud shaped windows and small domes.</p>
+  <div class="buttons">
+    <a class="btn" href="Jharokha-1.000.zip" download>Download the font</a>
+    <a class="btn line" href="#try">Try it first</a>
+  </div>
+  <div class="arcade j" aria-hidden="true"><span>mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</span></div>
+</header>
+
+<section class="try" id="try">
+  <div class="label">Type something</div>
+  <textarea id="box" class="j" rows="1" spellcheck="false" aria-label="Try the font">Namaste Dilli</textarea>
+  <div class="controls">
+    <label class="label" for="size">Size</label>
+    <input id="size" type="range" min="28" max="260" value="110">
+    <button class="swatch" style="background:#ffb627" data-bg="#ffb627" data-fg="#5c1020" aria-label="Saffron"></button>
+    <button class="swatch" style="background:#171a45" data-bg="#171a45" data-fg="#ee7b93" aria-label="Indigo"></button>
+    <button class="swatch" style="background:#0c5a5a" data-bg="#0c5a5a" data-fg="#f8eedb" aria-label="Teal"></button>
+    <button class="swatch" style="background:#f8eedb" data-bg="#f8eedb" data-fg="#e2572b" aria-label="Ivory"></button>
+  </div>
+</section>
+
+<section class="parts">
+  <div class="label">How it works</div>
+  <h2>Built like a building</h2>
+  <p>A jharokha is the stone balcony that hangs off the front of an old haveli or palace.
+     The font takes its parts from buildings like that. Every letter starts as a solid block,
+     and then the arches get cut out of it.</p>
+  <div class="cards">
+    <div class="card"><div class="glyph j">h</div><h3>Door</h3>
+      <p>n, m, h and r stand on a pointed doorway. Flip it upside down and you get u.</p></div>
+    <div class="card"><div class="glyph j">o</div><h3>Bud</h3>
+      <p>Round letters are blocks with a window in the shape of a lotus bud.</p></div>
+    <div class="card"><div class="glyph j">i</div><h3>Dome</h3>
+      <p>Tall stems end in a small onion dome. The dots and the full stop are domes too.</p></div>
+    <div class="card"><div class="glyph j">A</div><h3>Cusps</h3>
+      <p>Capital A, H and M get scalloped arches, and A has a pointed finial on top.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="label">Character set</div>
+  <h2>What is in the box</h2>
+  <p>Capitals, lowercase, figures, punctuation, the rupee sign, accents for most Western European
+     languages, and the dotted letters you need to write Sanskrit in Latin script.</p>
+  <div class="grid" id="grid"></div>
+  <p class="count" id="count"></p>
+</section>
+
+<section class="sans">
+  <div class="label">Sanskrit in Latin letters</div>
+  <div class="words j">Rāmāyaṇa <span>Mahābhārata</span> Kṛṣṇa <span>Śiva</span> Gaṇeśa <span>Aṣṭāṅga</span></div>
+  <p>Every dot above or below a letter is a tiny dome, same as the dot on the i.</p>
+</section>
+
+<section class="posters">
+  <div class="label">In use</div>
+  <h2>Posters</h2>
+  <p>A few posters made for the release. Click one to see it full size. You are welcome to share them.</p>
+  <div class="wall">
+    <a href="promo/poster-1-hero.png"><img src="promo/poster-1-hero.png" alt="Poster with a giant letter A shaped like a gateway" loading="lazy" width="1200" height="1800"></a>
+    <a href="promo/poster-3-anatomy.png"><img src="promo/poster-3-anatomy.png" alt="Poster explaining the door, bud, dome and cusps" loading="lazy" width="1800" height="1200"></a>
+    <a href="promo/poster-4-cities.png"><img src="promo/poster-4-cities.png" alt="Poster of Indian city names in colour bands" loading="lazy" width="1200" height="1800"></a>
+    <a href="promo/social-square.png"><img src="promo/social-square.png" alt="The letters A and a in maroon on saffron" loading="lazy" width="1080" height="1080"></a>
+    <a href="promo/poster-6-sample-mela.png"><img src="promo/poster-6-sample-mela.png" alt="Sample event poster for a monsoon mela" loading="lazy" width="1200" height="1800"></a>
+    <a href="promo/poster-2-alphabet.png"><img src="promo/poster-2-alphabet.png" alt="Poster showing the alphabet" loading="lazy" width="1200" height="1800"></a>
+    <a href="promo/poster-5-sanskrit.png"><img src="promo/poster-5-sanskrit.png" alt="Poster with Sanskrit words in Latin letters" loading="lazy" width="1200" height="1800"></a>
+  </div>
+</section>
+
+<section class="use" id="use">
+  <div class="label">Get it</div>
+  <h2>Use it</h2>
+  <p>Download the zip, open it, and install <b>Jharokha-Regular.ttf</b>. For a website, use the woff file:</p>
+<pre>@font-face {
+  font-family: "Jharokha";
+  src: url("Jharokha-Regular.woff") format("woff");
+}
+h1 { font-family: "Jharokha", sans-serif; }</pre>
+  <ul>
+    <li>It is a display font. Use it for headlines, posters, logos, packaging and signs.</li>
+    <li>It looks best at 24 px and above. Smaller than that and the little windows fill in.</li>
+    <li>There is one weight for now.</li>
+  </ul>
+  <div class="buttons" style="margin-bottom:0">
+    <a class="btn" style="background:var(--maroon);border-color:var(--maroon);color:var(--ivory)" href="Jharokha-1.000.zip" download>Download the font</a>
+    <a class="btn line" style="color:var(--maroon);border-color:var(--maroon)" href="https://github.com/orijitghosh/jharokha">Source on GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <div class="j">Jharokha</div>
+  <p>Designed by Arijit Ghosh. Free to use for anything, including commercial work,
+     under the <a href="OFL.txt">SIL Open Font License 1.1</a>.</p>
+</footer>
+
+<script>
+  // character grid
+  var sets = [
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz", "0123456789",
+    "₹$%&@#*+=<>^~.,:;!?¡¿'\"-_()[]{}/\\|",
+    "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝ", "àáâãäåçèéêëìíîïñòóôõöøùúûüýÿ",
+    "ĀĒĪŌŪṚṜḶṄṬḌṆŚṢḤṀṂ", "āēīōūṛṝḷṅṭḍṇśṣḥṁṃ", "ĆČŃŠŞŹŻŽćčńšşźżž"
+  ];
+  var grid = document.getElementById("grid"), n = 0;
+  sets.forEach(function (set) {
+    Array.from(set).forEach(function (ch) {
+      var cell = document.createElement("div");
+      cell.textContent = ch;
+      grid.appendChild(cell);
+      n++;
+    });
+  });
+  document.getElementById("count").textContent = n + " shown here. The font has 210 glyphs in all.";
+
+  // tester
+  var box = document.getElementById("box"), size = document.getElementById("size");
+  var tryPanel = document.getElementById("try");
+  function grow() { box.style.height = "auto"; box.style.height = box.scrollHeight + "px"; }
+  function resize() {
+    var max = Math.max(40, Math.min(260, window.innerWidth * 0.22));
+    box.style.fontSize = Math.min(size.value, max) + "px";
+    grow();
+  }
+  size.addEventListener("input", resize);
+  box.addEventListener("input", grow);
+  window.addEventListener("resize", resize);
+  document.querySelectorAll(".swatch").forEach(function (b) {
+    b.addEventListener("click", function () {
+      tryPanel.style.background = b.dataset.bg;
+      tryPanel.style.color = b.dataset.fg;
+      box.style.color = b.dataset.fg;
+      box.style.borderColor = b.dataset.fg;
+    });
+  });
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(resize); }
+  resize();
+</script>
+</body>
+</html>
